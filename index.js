@@ -53,20 +53,21 @@ app.post("/api/persons", (req, res) => {
         error: 'name or number missing' 
       })}
 
-    if (phonebook.find(person => person.name === name)) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
-    }
+    // if (phonebook.find(person => person.name === name)) {
+    //     return res.status(400).json({
+    //         error: 'name must be unique'
+    //     })
+    // }
 
-    const person = {
-        name: req.body.name,
-        number: req.body.number,
-        id: generateId(),
-    }
+    const person = new Person ({
+        name: name,
+        number: number,
+    })
 
-    phonebook = phonebook.concat(person)
-    res.json(person)
+    person.save().then(newPerson => res.json(newPerson))
+
+    // phonebook = phonebook.concat(person)
+    // res.json(person)
 })
 
 const unknownEndpoint = (request, response) => {
