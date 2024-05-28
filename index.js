@@ -16,11 +16,13 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 
 app.get("/api/info", (req, res) => {
+  Person.find({}).then(people => {
     const requestTime = new Date();
     res.send(`
-    <p>Phonebook has info for ${phonebook.length} people</p>
+    <p>Phonebook has info for ${people.length} people</p>
     <p>${requestTime}</p>`)
-})
+    })
+  })
 
 
 app.get("/api/persons", (req, res) => {
