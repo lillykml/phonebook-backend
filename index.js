@@ -14,9 +14,6 @@ app.use(express.static('dist'))
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.get("/api/persons", (req, res) => {
-    Person.find({}).then(people => res.json(people))
-})
 
 app.get("/api/info", (req, res) => {
     const requestTime = new Date();
@@ -25,24 +22,28 @@ app.get("/api/info", (req, res) => {
     <p>${requestTime}</p>`)
 })
 
+
+app.get("/api/persons", (req, res) => {
+  Person.find({}).then(people => res.json(people))
+})
+
+
 app.get("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id)
     const person = phonebook.find(person => person.id === id)
     if (person) {
         res.json(person)
     } else res.status(404).end()
-
 })
+
 
 app.delete("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id)
-    phonebook = phonebook.filter(person => person.id !== id)
+  Person.findByIdAndDelete(req.params.id)
+  .then(result => {
     res.status(204).end()
+  })
 })
 
-const generateId = () => {
-    return Math.floor(Math.random()*1000000)
-  }
 
 app.post("/api/persons", (req, res) => {
     const name = req.body.name
